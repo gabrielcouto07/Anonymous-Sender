@@ -1,5 +1,5 @@
 """
-Canal de Denúncias e Relatos Éticos (Compliance / OEA)
+Canal de Denúncias e Relatos Éticos (Compliance)
 =======================================================
 
 Ultra-light internal web application that receives an ethics / compliance
@@ -115,7 +115,7 @@ CONFIG = {
     "MAIL_FROM": _env("MAIL_FROM", _env("SMTP_USER", "chamados@scientificdental.com")),
     "MAIL_TO": _env("MAIL_TO", "compliance@scientificdental.com"),
     "SUBJECT_PREFIX": _env(
-        "SUBJECT_PREFIX", "[CANAL DE ÉTICA & COMPLIANCE - OEA] Novo Relato Registrado"
+        "SUBJECT_PREFIX", "[CANAL DE ÉTICA & COMPLIANCE] Novo Relato Registrado"
     ),
     # Behaviour
     "TZ_NAME": _env("TZ_NAME", "America/Sao_Paulo"),
@@ -134,7 +134,7 @@ CONFIG = {
 
 CATEGORIES = (
     "Conduta Ética / Assédio",
-    "Segurança da Cadeia Logística (OEA)",
+    "Segurança da Cadeia Logística",
     "Fraude / Desvio",
     "Outros",
 )
@@ -209,10 +209,10 @@ def build_body(name: str, category: str, message: str, when: datetime) -> str:
     sep = "=" * 50
     stamp = when.strftime("%d/%m/%Y às %H:%M:%S")
     if name:
-        title = "RELATO DE COMPLIANCE / OEA"
+        title = "RELATO DE COMPLIANCE"
         who = name
     else:
-        title = "RELATO DE COMPLIANCE / OEA (ANÔNIMO)"
+        title = "RELATO DE COMPLIANCE (ANÔNIMO)"
         who = "NÃO INFORMADO (RELATO 100% ANÔNIMO)"
     return (
         f"{sep}\n"
@@ -637,7 +637,7 @@ def send_test_email() -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Canal de Ética & Compliance (OEA)")
+    parser = argparse.ArgumentParser(description="Canal de Ética & Compliance")
     parser.add_argument(
         "--check-config",
         action="store_true",

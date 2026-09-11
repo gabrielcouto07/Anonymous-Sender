@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% if ok %}Relato enviado{% else %}Não foi possível enviar{% endif %} — {{ company }}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{# Fallback page used only when the browser has JavaScript disabled. #}
+<header class="topbar">
+  <div class="container topbar__inner">
+    <div class="logo-plate">
+      {% if logo_file %}
+        <img class="logo" src="{{ url_for('static', filename=logo_file) }}"
+             width="712" height="198" alt="{{ company }}" decoding="async">
+      {% else %}
+        <span class="wordmark">{{ company }}</span>
+      {% endif %}
+    </div>
+    <div class="topbar__title">
+      <span class="eyebrow">Programa de Conformidade OEA</span>
+      <h1>Canal de Ética &amp; Compliance</h1>
+    </div>
+  </div>
+</header>
+
+<main class="container container--narrow">
+  <section class="card">
+    <div class="status status--{{ 'success' if ok else 'error' }}" role="status">{{ text }}</div>
+    <p class="actions">
+      <a class="btn" href="{{ url_for('index') }}">{% if ok %}Registrar outro relato{% else %}Voltar e tentar novamente{% endif %}</a>
+    </p>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <span>{{ company }} · Programa OEA — Operador Econômico Autorizado</span>
+    <span class="footer__muted">Sem conteúdo de relatos em logs, sem sessão e sem cookies.</span>
+  </div>
+</footer>
+</body>
+</html>

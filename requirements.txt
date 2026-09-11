@@ -1,0 +1,4 @@
+# Versões auditadas em 11/09/2026. Atualize de forma deliberada e rode os testes.
+Flask==3.1.3
+waitress==3.0.2
+tzdata==2026.3

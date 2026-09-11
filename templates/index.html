@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Canal de Ética &amp; Compliance — {{ company }}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar__inner">
+    <div class="logo-plate">
+      {% if logo_file %}
+        <img class="logo" src="{{ url_for('static', filename=logo_file) }}"
+             width="712" height="198" alt="{{ company }}" decoding="async">
+      {% else %}
+        <span class="wordmark">{{ company }}</span>
+      {% endif %}
+    </div>
+    <div class="topbar__title">
+      <span class="eyebrow">Programa de Conformidade OEA</span>
+      <h1>Canal de Ética &amp; Compliance</h1>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="notice" role="note" aria-label="Aviso de confidencialidade">
+    <svg class="notice__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.5 4.6-1.35 8-6.25 8-11.5V5l-8-3Z" fill="currentColor" opacity=".18"/>
+      <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.5 4.6-1.35 8-6.25 8-11.5V5l-8-3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="m8.8 12.2 2.2 2.2 4.4-4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p>
+      <strong>Canal confidencial de relatos e denúncias — Programa de Conformidade OEA.</strong>
+      Você pode enviar sem se identificar. O conteúdo do formulário não é salvo neste servidor:
+      ele é encaminhado diretamente ao Comitê de Compliance.
+    </p>
+  </section>
+
+  <div class="grid">
+
+    <section class="card" aria-labelledby="titulo-form">
+      <h2 id="titulo-form">Registrar relato</h2>
+      <p class="lead">Preencha os campos abaixo. Apenas a categoria e a descrição são obrigatórias.</p>
+
+      <form id="form-relato"
+            method="post"
+            action="{{ url_for('enviar') }}"
+            autocomplete="off"
+            novalidate
+            data-honeypot="{{ honeypot }}">
+
+        <div class="field">
+          <label for="nome">Nome / Identificação <span class="optional">(opcional)</span></label>
+          <input id="nome" name="nome" type="text"
+                 maxlength="{{ max_name }}"
+                 aria-describedby="nome-ajuda"
+                 placeholder="Deixe em branco para enviar de forma anônima"
+                 autocomplete="off" spellcheck="false">
+          <span id="nome-ajuda" class="hint hint--below">Se você preencher este campo, o relato será identificado no e-mail enviado ao Comitê.</span>
+        </div>
+
+        <div class="field">
+          <label for="categoria">Categoria do Relato <span class="required" aria-hidden="true">*</span></label>
+          <select id="categoria" name="categoria" required>
+            <option value="" selected disabled>Selecione a categoria…</option>
+            {% for c in categories %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="mensagem">Descrição do Relato <span class="required" aria-hidden="true">*</span></label>
+          <textarea id="mensagem" name="mensagem" rows="11" required aria-describedby="mensagem-ajuda contador"
+                    minlength="{{ min_chars }}" maxlength="{{ max_chars }}"
+                    placeholder="Descreva o que aconteceu, quando, onde e quem estava envolvido. Inclua detalhes que ajudem a apuração (datas, setores, documentos, testemunhas)."></textarea>
+          <div class="field__meta">
+            <span id="mensagem-ajuda" class="hint">Mínimo de {{ min_chars }} caracteres.</span>
+            <span id="contador" class="counter" data-max="{{ max_chars }}" aria-live="polite">{{ max_chars_fmt }} caracteres restantes</span>
+          </div>
+        </div>
+
+        {# Honeypot: invisible to people, irresistible to bots. Never remove the .hp class. #}
+        <div class="hp" aria-hidden="true">
+          <label for="{{ honeypot }}">Não preencha este campo</label>
+          <input id="{{ honeypot }}" name="{{ honeypot }}" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div id="status" class="status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+
+        <div class="actions">
+          <button id="btn-enviar" type="submit" class="btn">Enviar relato</button>
+          <span class="actions__note">Ao enviar, seu relato é encaminhado por e-mail diretamente ao Comitê de Compliance.</span>
+        </div>
+      </form>
+    </section>
+
+    <aside class="card card--aside" aria-labelledby="titulo-aside">
+      <h3 id="titulo-aside">Como funciona</h3>
+      <ol class="steps">
+        <li>Você descreve o fato, com ou sem identificação.</li>
+        <li>O relato é enviado por e-mail diretamente ao Comitê de Compliance.</li>
+        <li>O conteúdo não é gravado neste servidor: não há banco de dados, sessão ou cookies.</li>
+        <li>O Comitê apura o caso com sigilo e independência.</li>
+      </ol>
+
+      <h3>O que relatar</h3>
+      <ul class="topics">
+        <li><strong>Conduta Ética / Assédio</strong> — assédio moral ou sexual, discriminação, conflito de interesses.</li>
+        <li><strong>Segurança da Cadeia Logística (OEA)</strong> — falhas em controle de acesso, lacres, cargas, parceiros comerciais ou documentação aduaneira.</li>
+        <li><strong>Fraude / Desvio</strong> — apropriação indevida, manipulação de registros, suborno, favorecimento.</li>
+        <li><strong>Outros</strong> — qualquer situação que viole o Código de Conduta ou a legislação.</li>
+      </ul>
+
+      <h3>Compromisso de sigilo</h3>
+      <p>Retaliação contra quem relata de boa-fé é proibida. Relatos falsos, feitos de má-fé, também são tratados como violação do Código de Conduta.</p>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <span>{{ company }} · Programa OEA — Operador Econômico Autorizado · Receita Federal do Brasil</span>
+    <span class="footer__muted">Sem conteúdo de relatos em logs, sem sessão e sem cookies.</span>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>

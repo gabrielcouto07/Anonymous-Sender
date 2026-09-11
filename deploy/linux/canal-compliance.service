@@ -1,0 +1,42 @@
+# systemd unit for the Canal de Ética & Compliance (Linux VM alternative).
+#
+# Install:
+#   sudo useradd --system --no-create-home --shell /usr/sbin/nologin compliance
+#   sudo mkdir -p /opt/canal-compliance && sudo cp -r . /opt/canal-compliance
+#   cd /opt/canal-compliance && sudo python3 -m venv venv && sudo venv/bin/pip install -r requirements.txt
+#   sudo cp .env.example .env && sudo nano .env            # preencha SMTP_PASSWORD
+#   sudo chown -R compliance:compliance /opt/canal-compliance
+#   sudo chmod 600 /opt/canal-compliance/.env
+#   sudo cp deploy/linux/canal-compliance.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now canal-compliance
+#   sudo systemctl status canal-compliance ; journalctl -u canal-compliance -f
+#   Termine HTTPS em um proxy local e publique somente 443; nao abra 8980.
+
+[Unit]
+Description=Canal de Ética e Compliance (OEA) - portal interno de relatos
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=compliance
+Group=compliance
+WorkingDirectory=/opt/canal-compliance
+ExecStart=/opt/canal-compliance/venv/bin/python serve.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+
+# Hardening: the process only needs to read its own folder and write ./logs.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/canal-compliance/logs
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

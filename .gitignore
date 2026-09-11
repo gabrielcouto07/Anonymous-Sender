@@ -1,0 +1,17 @@
+# Segredos e ambiente local — NUNCA versionar
+.env
+
+# Ambiente virtual e caches do Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Logs operacionais (não contêm dados de relatos, mas não pertencem ao repositório)
+logs/
+*.log
+
+# Binário do NSSM baixado localmente para instalar o serviço Windows
+deploy/windows/tools/
